@@ -1,0 +1,113 @@
+---
+title: "texas-tenure"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+```
+
+```{r data}
+tenure_2015 <- read.csv("texas-tenure-2015.csv")
+tenure_2016 <- read.csv("texas-tenure-2016.csv")
+tenure_2017 <- read.csv("texas-tenure-2017.csv")
+tenure_2018 <- read.csv("texas-tenure-2018.csv")
+tenure_2019 <- read.csv("texas-tenure-2019.csv")
+
+tenure_2015 <- tenure_2015 %>% 
+  mutate(year = 2015)
+tenure_2016 <- tenure_2016 %>% 
+  mutate(year = 2016)
+tenure_2017 <- tenure_2017 %>% 
+  mutate(year = 2017)
+tenure_2018 <- tenure_2018 %>% 
+  mutate(year = 2018)
+tenure_2019 <- tenure_2019 %>% 
+  mutate(year = 2019)
+
+tenure <- bind_rows(tenure_2015, tenure_2016, tenure_2017, tenure_2018, tenure_2019)
+
+#filter for schools with tenured faculty & undergraduate students
+tenure <- tenure %>% 
+  filter(!is.na(tenured_total) & !is.na(student_total))
+
+tenure <- tenure %>% 
+  mutate(pct_ind_tenured = ind_tenured / tenured_total * 100,
+         pct_asian_tenured = asian_tenured / tenured_total * 100,
+         pct_black_tenured = black_tenured / tenured_total * 100,
+         pct_his_tenured = his_tenured / tenured_total * 100,
+         pct_pi_tenured = pi_tenured / tenured_total * 100,
+         pct_white_tenured = white_tenured / tenured_total * 100,
+         pct_multi_tenured = multi_tenured / tenured_total * 100,
+         pct_unknown_tenured = unknown_tenured / tenured_total * 100,
+         pct_ind_student = ind_student / student_total * 100,
+         pct_asian_student = asian_student / student_total * 100,
+         pct_black_student = black_student / student_total * 100,
+         pct_his_student = his_student / student_total * 100,
+         pct_pi_student = pi_student / student_total * 100,
+         pct_white_student = white_student / student_total * 100,
+         pct_multi_student = multi_student / student_total * 100,
+         pct_unknown_student = unknown_student / student_total * 100)
+```
+
+```{r analysis}
+# percentage of Black tenured professors
+tenure %>% 
+  filter(year == 2019) %>% 
+  arrange(desc(pct_black_tenured)) %>% 
+  select(name, pct_black_tenured, pct_black_student)
+
+# percentage of Black undergraduate students
+tenure %>% 
+  filter(year == 2019) %>% 
+  arrange(desc(pct_black_student)) %>% 
+  select(name, pct_black_tenured, pct_black_student)
+
+# difference between Black students & professors
+tenure %>% 
+  filter(year == 2019) %>% 
+  select(name, pct_black_tenured, pct_black_student) %>% 
+  mutate(diff = pct_black_student - pct_black_tenured) %>% 
+  arrange(desc(diff))
+
+# difference between white students & professors
+tenure %>% 
+  filter(year == 2019) %>% 
+  select(name, pct_white_tenured, pct_white_student) %>% 
+  mutate(diff = pct_white_student - pct_white_tenured) %>% 
+  arrange(diff)
+
+universities <- c("The University of Texas at Arlington", "The University of Texas at Dallas", 
+                  "University of North Texas", "University of North Texas at Dallas", 
+                  "Texas A & M University-Commerce", "Texas Woman's University", "Southern Methodist University", 
+                  "Texas Christian University", "Texas Wesleyan University", "University of Houston", 
+                  "The University of Texas at Austin", "Texas A & M University-College Station",
+                  "Texas State University", "Texas Tech University")
+
+tenure %>% 
+  filter(year == 2019, name %in% universities) %>% 
+  select(name, pct_black_tenured, pct_black_student) %>% 
+  mutate(diff = pct_black_student - pct_black_tenured)
+
+# difference over time (raw numbers)
+tenure %>% 
+  filter(year == 2019 | year == 2015) %>% 
+  select(name, year, black_tenured) %>% 
+  pivot_wider(names_from = year, values_from = black_tenured) %>% 
+  filter(!is.na(`2015`) & !is.na(`2019`)) %>% 
+  mutate(diff = `2019` - `2015`) %>% 
+  arrange(desc(diff))
+
+# difference over time (percentages)
+tenure %>% 
+  filter(year == 2019 | year == 2015) %>% 
+  select(name, year, pct_black_tenured) %>% 
+  pivot_wider(names_from = year, values_from = pct_black_tenured) %>% 
+  filter(!is.na(`2015`) & !is.na(`2019`)) %>% 
+  mutate(diff = `2019` - `2015`) %>% 
+  arrange(desc(diff))
+```
