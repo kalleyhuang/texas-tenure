@@ -12,28 +12,34 @@ library(tidyverse)
 ```
 
 ```{r data}
+tenure_2001 <- read.csv("texas-tenure-2001.csv")
 tenure_2015 <- read.csv("texas-tenure-2015.csv")
 tenure_2016 <- read.csv("texas-tenure-2016.csv")
 tenure_2017 <- read.csv("texas-tenure-2017.csv")
 tenure_2018 <- read.csv("texas-tenure-2018.csv")
 tenure_2019 <- read.csv("texas-tenure-2019.csv")
 
-tenure_2015 <- tenure_2015 %>% 
-  mutate(year = 2015)
-tenure_2016 <- tenure_2016 %>% 
-  mutate(year = 2016)
-tenure_2017 <- tenure_2017 %>% 
-  mutate(year = 2017)
-tenure_2018 <- tenure_2018 %>% 
-  mutate(year = 2018)
-tenure_2019 <- tenure_2019 %>% 
-  mutate(year = 2019)
-
-tenure <- bind_rows(tenure_2015, tenure_2016, tenure_2017, tenure_2018, tenure_2019)
-
 #filter for schools with tenured faculty & undergraduate students
-tenure <- tenure %>% 
+tenure_2001 <- tenure_2001 %>% 
+  mutate(year = 2001) %>% 
   filter(!is.na(tenured_total) & !is.na(student_total))
+tenure_2015 <- tenure_2015 %>% 
+  mutate(year = 2015) %>% 
+  filter(!is.na(tenured_total) & !is.na(student_total))
+tenure_2016 <- tenure_2016 %>% 
+  mutate(year = 2016) %>% 
+  filter(!is.na(tenured_total) & !is.na(student_total))
+tenure_2017 <- tenure_2017 %>% 
+  mutate(year = 2017) %>% 
+  filter(!is.na(tenured_total) & !is.na(student_total))
+tenure_2018 <- tenure_2018 %>% 
+  mutate(year = 2018) %>% 
+  filter(!is.na(tenured_total) & !is.na(student_total))
+tenure_2019 <- tenure_2019 %>% 
+  mutate(year = 2019) %>% 
+  filter(!is.na(tenured_total) & !is.na(student_total))
+
+tenure <- bind_rows(tenure_2001, tenure_2015, tenure_2016, tenure_2017, tenure_2018, tenure_2019)
 
 tenure <- tenure %>% 
   mutate(pct_ind_tenured = ind_tenured / tenured_total * 100,
@@ -55,59 +61,91 @@ tenure <- tenure %>%
 ```
 
 ```{r analysis}
-# percentage of Black tenured professors
-tenure %>% 
-  filter(year == 2019) %>% 
-  arrange(desc(pct_black_tenured)) %>% 
-  select(name, pct_black_tenured, pct_black_student)
-
-# percentage of Black undergraduate students
-tenure %>% 
-  filter(year == 2019) %>% 
-  arrange(desc(pct_black_student)) %>% 
-  select(name, pct_black_tenured, pct_black_student)
+universities <- c("The University of Texas at Arlington", "The University of Texas at Dallas", 
+                  "University of North Texas", "University of North Texas at Dallas", 
+                  "Texas A & M University-Commerce", "Texas Woman's University", "Southern Methodist University", 
+                  "Texas Christian University", "Texas Wesleyan University", "University of Houston", 
+                  "The University of Texas at Austin", "Texas A & M University-College Station",
+                  "Texas State University", "Texas Tech University", "Abilene Christian University", 
+                  "Baylor University", "Rice University")
 
 # difference between Black students & professors
 tenure %>% 
   filter(year == 2019) %>% 
   select(name, pct_black_tenured, pct_black_student) %>% 
   mutate(diff = pct_black_student - pct_black_tenured) %>% 
-  arrange(desc(diff))
+  arrange(desc(diff)) %>% 
+  filter(name %in% universities)
+
+# difference between Hispanic students & professors
+tenure %>% 
+  filter(year == 2019) %>% 
+  select(name, pct_his_tenured, pct_his_student) %>% 
+  mutate(diff = pct_his_student - pct_his_tenured) %>% 
+  arrange(desc(diff)) %>% 
+  filter(name %in% universities)
 
 # difference between white students & professors
 tenure %>% 
   filter(year == 2019) %>% 
   select(name, pct_white_tenured, pct_white_student) %>% 
   mutate(diff = pct_white_student - pct_white_tenured) %>% 
-  arrange(diff)
+  arrange(diff) %>% 
+  filter(name %in% universities)
 
-universities <- c("The University of Texas at Arlington", "The University of Texas at Dallas", 
-                  "University of North Texas", "University of North Texas at Dallas", 
-                  "Texas A & M University-Commerce", "Texas Woman's University", "Southern Methodist University", 
-                  "Texas Christian University", "Texas Wesleyan University", "University of Houston", 
-                  "The University of Texas at Austin", "Texas A & M University-College Station",
-                  "Texas State University", "Texas Tech University")
-
-tenure %>% 
-  filter(year == 2019, name %in% universities) %>% 
-  select(name, pct_black_tenured, pct_black_student) %>% 
-  mutate(diff = pct_black_student - pct_black_tenured)
-
-# difference over time (raw numbers)
+# difference from 2015 to 2019 (raw numbers)
 tenure %>% 
   filter(year == 2019 | year == 2015) %>% 
   select(name, year, black_tenured) %>% 
   pivot_wider(names_from = year, values_from = black_tenured) %>% 
   filter(!is.na(`2015`) & !is.na(`2019`)) %>% 
   mutate(diff = `2019` - `2015`) %>% 
-  arrange(desc(diff))
+  arrange(desc(diff)) %>% 
+  filter(name %in% universities)
 
-# difference over time (percentages)
+# difference from 2015 to 2019 (percentages)
 tenure %>% 
   filter(year == 2019 | year == 2015) %>% 
   select(name, year, pct_black_tenured) %>% 
   pivot_wider(names_from = year, values_from = pct_black_tenured) %>% 
   filter(!is.na(`2015`) & !is.na(`2019`)) %>% 
   mutate(diff = `2019` - `2015`) %>% 
-  arrange(desc(diff))
+  arrange(desc(diff)) %>% 
+  filter(name %in% universities)
+
+# difference from 2001 to 2019 (raw numbers)
+ten_01_raw <- tenure %>% 
+  filter(year == 2001) %>% 
+  select(name, black_tenured) %>% 
+  filter(name %in% tenure_2019$name) %>% 
+  arrange(name)
+ten_19_raw <- tenure %>% 
+  filter(year == 2019) %>% 
+  select(name, black_tenured) %>% 
+  filter(name %in% tenure_2001$name) %>% 
+  arrange(name)
+ten_01_raw %>% 
+  rename(`2001` = black_tenured) %>% 
+  mutate(`2019` = ten_19_raw$black_tenured) %>% 
+  mutate(diff = `2019` - `2001`) %>% 
+  arrange(desc(diff)) %>% 
+  filter(name %in% universities)
+
+# difference from 2001 to 2019 (percentages)
+ten_01_pct <- tenure %>% 
+  filter(year == 2001) %>% 
+  select(name, pct_black_tenured) %>% 
+  filter(name %in% tenure_2019$name) %>% 
+  arrange(name)
+ten_19_pct <- tenure %>% 
+  filter(year == 2019) %>% 
+  select(name, pct_black_tenured) %>% 
+  filter(name %in% tenure_2001$name) %>% 
+  arrange(name)
+ten_01_pct %>% 
+  rename(`2001` = pct_black_tenured) %>% 
+  mutate(`2019` = ten_19_pct$pct_black_tenured) %>% 
+  mutate(diff = `2019` - `2001`) %>% 
+  arrange(desc(diff)) %>% 
+  filter(name %in% universities)
 ```
