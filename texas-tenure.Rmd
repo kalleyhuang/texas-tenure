@@ -58,24 +58,24 @@ tenure <- tenure %>%
          pct_white_student = white_student / student_total * 100,
          pct_multi_student = multi_student / student_total * 100,
          pct_unknown_student = unknown_student / student_total * 100)
+
+dfw <- c("The University of Texas at Arlington", "The University of Texas at Dallas", "University of North Texas", 
+         "University of North Texas at Dallas", "Texas A & M University-Commerce", "Texas Woman's University", 
+         "Southern Methodist University", "Texas Christian University", "Texas Wesleyan University")
+flagship <- c("University of Houston", "The University of Texas at Austin", "Texas A & M University-College Station",
+              "Texas State University", "Texas Tech University", "Abilene Christian University", "Baylor University", 
+              "Rice University")
+# HBCUs: Huston–Tillotson University, Jarvis Christian College, Paul Quinn College, Prairie View A&M University, Southwestern Christian College, St. Philip's College, Texas College, Texas Southern University, Wiley College
 ```
 
-```{r analysis}
-universities <- c("The University of Texas at Arlington", "The University of Texas at Dallas", 
-                  "University of North Texas", "University of North Texas at Dallas", 
-                  "Texas A & M University-Commerce", "Texas Woman's University", "Southern Methodist University", 
-                  "Texas Christian University", "Texas Wesleyan University", "University of Houston", 
-                  "The University of Texas at Austin", "Texas A & M University-College Station",
-                  "Texas State University", "Texas Tech University", "Abilene Christian University", 
-                  "Baylor University", "Rice University")
-
+```{r}
 # difference between Black students & professors
 tenure %>% 
   filter(year == 2019) %>% 
   select(name, pct_black_tenured, pct_black_student) %>% 
   mutate(diff = pct_black_student - pct_black_tenured) %>% 
   arrange(desc(diff)) %>% 
-  filter(name %in% universities)
+  filter(name %in% dfw | name %in% flagship)
 
 # difference between Hispanic students & professors
 tenure %>% 
@@ -83,7 +83,7 @@ tenure %>%
   select(name, pct_his_tenured, pct_his_student) %>% 
   mutate(diff = pct_his_student - pct_his_tenured) %>% 
   arrange(desc(diff)) %>% 
-  filter(name %in% universities)
+  filter(name %in% dfw | name %in% flagship)
 
 # difference between white students & professors
 tenure %>% 
@@ -91,8 +91,19 @@ tenure %>%
   select(name, pct_white_tenured, pct_white_student) %>% 
   mutate(diff = pct_white_student - pct_white_tenured) %>% 
   arrange(diff) %>% 
-  filter(name %in% universities)
+  filter(name %in% dfw | name %in% flagship)
 
+tenure %>% 
+  filter(year == 2019, name %in% dfw | name %in% flagship)
+```
+
+* mean difference b/w Black undergraduate students & tenured professors: 7%
+* mean difference b/w Hispanic undergraduate students & tenured professors: 28%
+* mean difference b/w white undergraduate students & tenured professors: -34%
+* UNT Dallas has fifth largest difference statewide: 26% Black undergraduate students, 4% Black tenured professors
+* TWU has third largest difference statewide: 26% white undergraduate students, 83% white tenured professors
+
+```{r}
 # difference from 2015 to 2019 (raw numbers)
 tenure %>% 
   filter(year == 2019 | year == 2015) %>% 
@@ -101,7 +112,7 @@ tenure %>%
   filter(!is.na(`2015`) & !is.na(`2019`)) %>% 
   mutate(diff = `2019` - `2015`) %>% 
   arrange(desc(diff)) %>% 
-  filter(name %in% universities)
+  filter(name %in% dfw | name %in% flagship)
 
 # difference from 2015 to 2019 (percentages)
 tenure %>% 
@@ -111,7 +122,7 @@ tenure %>%
   filter(!is.na(`2015`) & !is.na(`2019`)) %>% 
   mutate(diff = `2019` - `2015`) %>% 
   arrange(desc(diff)) %>% 
-  filter(name %in% universities)
+  filter(name %in% dfw | name %in% flagship)
 
 # difference from 2001 to 2019 (raw numbers)
 ten_01_raw <- tenure %>% 
@@ -129,7 +140,7 @@ ten_01_raw %>%
   mutate(`2019` = ten_19_raw$black_tenured) %>% 
   mutate(diff = `2019` - `2001`) %>% 
   arrange(desc(diff)) %>% 
-  filter(name %in% universities)
+  filter(name %in% dfw | name %in% flagship)
 
 # difference from 2001 to 2019 (percentages)
 ten_01_pct <- tenure %>% 
@@ -147,5 +158,12 @@ ten_01_pct %>%
   mutate(`2019` = ten_19_pct$pct_black_tenured) %>% 
   mutate(diff = `2019` - `2001`) %>% 
   arrange(desc(diff)) %>% 
-  filter(name %in% universities)
+  filter(name %in% dfw | name %in% flagship)
 ```
+
+from 2015 to 2019:
+* Abilene, SMU, TWU, U of Houston, UNT Dallas had same numbers
+* Texas State & UT lost four professors
+
+from 2001 to 2019: 
+* TWU had one Black tenured professor both years
