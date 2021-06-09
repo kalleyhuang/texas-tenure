@@ -95,6 +95,11 @@ tenure %>%
 
 tenure %>% 
   filter(year == 2019, name %in% dfw | name %in% flagship)
+
+tenure %>% 
+  filter(name %in% dfw | name %in% flagship) %>% 
+  select(name, year, tenured_total) %>% 
+  pivot_wider(names_from = year, values_from = tenured_total)
 ```
 
 * mean difference b/w Black undergraduate students & tenured professors: 7%
