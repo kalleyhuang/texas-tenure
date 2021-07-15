@@ -1,5 +1,5 @@
 ---
-title: "texas-tenure"
+title: "Why are so few Black professors tenured? Texas has made little progress despite promises of change"
 output: html_document
 ---
 
@@ -12,75 +12,33 @@ library(tidyverse)
 ```
 
 ```{r data}
-tenure_2001 <- read.csv("texas-tenure-2001.csv") %>% 
-  mutate(year = 2001)
-tenure_2010 <- read.csv("texas-tenure-2010.csv") %>% 
+tenure_2010 <- read.csv("tenure_2010.csv") %>% 
   mutate(year = 2010)
-tenure_2011 <- read.csv("texas-tenure-2011.csv") %>% 
+tenure_2011 <- read.csv("tenure_2011.csv") %>% 
   mutate(year = 2011)
-tenure_2012 <- read.csv("texas-tenure-2012.csv") %>% 
+tenure_2012 <- read.csv("tenure_2012.csv") %>% 
   mutate(year = 2012)
-tenure_2013 <- read.csv("texas-tenure-2013.csv") %>% 
+tenure_2013 <- read.csv("tenure_2013.csv") %>% 
   mutate(year = 2013)
-tenure_2014 <- read.csv("texas-tenure-2014.csv") %>% 
+tenure_2014 <- read.csv("tenure_2014.csv") %>% 
   mutate(year = 2014)
-tenure_2015 <- read.csv("texas-tenure-2015.csv") %>% 
+tenure_2015 <- read.csv("tenure_2015.csv") %>% 
   mutate(year = 2015)
-tenure_2016 <- read.csv("texas-tenure-2016.csv") %>% 
+tenure_2016 <- read.csv("tenure_2016.csv") %>% 
   mutate(year = 2016)
-tenure_2017 <- read.csv("texas-tenure-2017.csv") %>% 
+tenure_2017 <- read.csv("tenure_2017.csv") %>% 
   mutate(year = 2017)
-tenure_2018 <- read.csv("texas-tenure-2018.csv") %>% 
+tenure_2018 <- read.csv("tenure_2018.csv") %>% 
   mutate(year = 2018)
-tenure_2019 <- read.csv("texas-tenure-2019.csv") %>% 
+tenure_2019 <- read.csv("tenure_2019.csv") %>% 
   mutate(year = 2019)
 
-tenure <- bind_rows(tenure_2001, tenure_2010, tenure_2011, tenure_2012, tenure_2013, tenure_2014, 
+tenure <- bind_rows(tenure_2010, tenure_2011, tenure_2012, tenure_2013, tenure_2014, 
                     tenure_2015, tenure_2016, tenure_2017, tenure_2018, tenure_2019)
 
 four_years <- c("Abilene Christian University", "Angelo State University", "Arlington Baptist University", "Austin College", "Austin Community College District", "Baptist Missionary Association Theological Seminary", "Baptist University of the Americas", "Baylor University", "Brazosport College", "College of Biblical Studies-Houston", "Concordia University Texas", "Criswell College", "Dallas Baptist University", "Dallas Christian College", "East Texas Baptist University", "Grace School of Theology", "Hardin-Simmons University", "Houston Baptist University", "Howard Payne University", "Huston-Tillotson University", "Jarvis Christian College", "Lamar University", "LeTourneau University", "Lubbock Christian University", "McMurry University", "Messenger College", "Midland College", "Midwestern State University", "North American University", "Our Lady of the Lake University", "Parker University", "Paul Quinn College", "Prairie View A & M University", "Remington College-Dallas Campus", "Remington College-Fort Worth Campus", "Remington College-North Houston Campus", "Rice University", "Saint Edward's University", "Sam Houston State University", "Schreiner University", "South Texas College", "Southern Methodist University", "Southwestern Adventist University", "Southwestern Assemblies of God University", "Southwestern Christian College", "Southwestern University", "St. Mary's University", "Stephen F Austin State University", "Sul Ross State University", "Tarleton State University", "Texas A & M International University", "Texas A & M University-College Station", "Texas A & M University-Commerce", "Texas A & M University-Corpus Christi", "Texas A & M University-Kingsville", "Texas A&M University-San Antonio", "Texas A&M University-Texarkana", "Texas Christian University", "Texas College", "Texas Lutheran University", "Texas Southern University", "Texas State University", "Texas Tech University", "Texas Wesleyan University", "Texas Woman's University", "The King's University", "The University of Texas Rio Grande Valley", "The University of Texas at Arlington", "The University of Texas at Austin", "The University of Texas at Dallas", "The University of Texas at El Paso", "The University of Texas at San Antonio", "The University of Texas at Tyler", "The University of Texas of the Permian Basin", "Trinity University", "Tyler Junior College", "University of Dallas", "University of Houston", "University of Houston-Clear Lake", "University of Houston-Downtown", "University of Houston-Victoria", "University of Mary Hardin-Baylor", "University of North Texas", "University of North Texas at Dallas", "University of St Thomas", "University of the Incarnate Word", "Wayland Baptist University", "West Texas A & M University", "Wiley College", "Amberton University", "Austin Graduate School of Theology", "Dallas Nursing Institute", "Hallmark University", "Texas A & M University-Central Texas", "Texas A & M University-System Office", "Texas Tech University Health Sciences Center", "Texas Tech University Health Sciences Center-El Paso", "Texas Tech University System Administration", "The University of Texas Health Science Center at Houston", "The University of Texas Health Science Center at San Antonio", "The University of Texas MD Anderson Cancer Center", "The University of Texas Medical Branch", "The University of Texas System Office", "University of Houston-System Administration", "University of North Texas System")
 
-four_years_2019 <- c("Abilene Christian University", "Angelo State University", 
-                #"Arlington Baptist University",
-                "Austin College", 
-                #"Austin Community College District", "Baptist Missionary Association Theological Seminary", "Baptist University of the Americas", 
-                "Baylor University", "Brazosport College", 
-                #"College of Biblical Studies-Houston", 
-                "Concordia University Texas", 
-                #"Criswell College", "Dallas Baptist University", "Dallas Christian College", 
-                "East Texas Baptist University", 
-                #"Grace School of Theology", 
-                "Hardin-Simmons University", 
-                #"Houston Baptist University", 
-                "Howard Payne University", "Huston-Tillotson University", "Jarvis Christian College", "Lamar University", "LeTourneau University", "Lubbock Christian University", "McMurry University", 
-                #"Messenger College", "Midland College", 
-                "Midwestern State University", 
-                #"North American University", 
-                "Our Lady of the Lake University", 
-                #"Parker University", "Paul Quinn College", 
-                "Prairie View A & M University", 
-                #"Remington College-Dallas Campus", "Remington College-Fort Worth Campus", "Remington College-North Houston Campus", 
-                "Rice University", "Saint Edward's University", "Sam Houston State University", "Schreiner University", 
-                #"South Texas College", 
-                "Southern Methodist University", 
-                #"Southwestern Adventist University", "Southwestern Assemblies of God University", "Southwestern Christian College", 
-                "Southwestern University", "St. Mary's University", "Stephen F Austin State University", "Sul Ross State University", "Tarleton State University", "Texas A & M International University", "Texas A & M University-College Station", "Texas A & M University-Commerce", "Texas A & M University-Corpus Christi", "Texas A & M University-Kingsville", "Texas A&M University-San Antonio", "Texas A&M University-Texarkana", "Texas Christian University", 
-                #"Texas College", 
-                "Texas Lutheran University", "Texas Southern University", "Texas State University", "Texas Tech University", "Texas Wesleyan University", "Texas Woman's University", 
-                #"The King's University", 
-                "The University of Texas Rio Grande Valley", "The University of Texas at Arlington", "The University of Texas at Austin", "The University of Texas at Dallas", "The University of Texas at El Paso", "The University of Texas at San Antonio", "The University of Texas at Tyler", "The University of Texas of the Permian Basin", "Trinity University", 
-                #"Tyler Junior College", 
-                "University of Dallas", "University of Houston", "University of Houston-Clear Lake", "University of Houston-Downtown", "University of Houston-Victoria", "University of Mary Hardin-Baylor", "University of North Texas", "University of North Texas at Dallas", "University of St Thomas", "University of the Incarnate Word", 
-                #"Wayland Baptist University", 
-                "West Texas A & M University", 
-                #"Wiley College", "Amberton University", "Austin Graduate School of Theology", "Dallas Nursing Institute", "Hallmark University", "Texas A & M University-Central Texas", "Texas A & M University-System Office", 
-                "Texas Tech University Health Sciences Center", "Texas Tech University Health Sciences Center-El Paso", 
-                #"Texas Tech University System Administration", 
-                "The University of Texas Health Science Center at Houston", "The University of Texas Health Science Center at San Antonio", "The University of Texas MD Anderson Cancer Center"
-                #, "The University of Texas Medical Branch", "The University of Texas System Office", "University of Houston-System Administration", "University of North Texas System"
-                )
-
-#filter for four-year schools with tenured faculty & undergraduate students
+# filter for four-year public & private higher education institutions with tenured faculty & undergraduate students
 tenure <- tenure %>% 
   filter(name %in% four_years) %>% 
   filter(!is.na(tenured_total) & !is.na(student_total)) %>% 
@@ -102,77 +60,26 @@ tenure <- tenure %>%
          pct_multi_student = multi_student / student_total * 100,
          pct_unknown_student = unknown_student / student_total * 100)
 
+tenure <- tenure[,c(1, 52, 2:51, 53:68)]
+
 dfw <- c("The University of Texas at Arlington", "The University of Texas at Dallas", "University of North Texas", "University of North Texas at Dallas", "Texas A & M University-Commerce", "Texas Woman's University", "Southern Methodist University", "Texas Christian University", "Texas Wesleyan University")
 flagship <- c("University of Houston", "The University of Texas at Austin", "Texas A & M University-College Station", "Texas State University", "Texas Tech University", "Abilene Christian University", "Baylor University", "Rice University")
-hbcu <- c("Huston–Tillotson University", "Jarvis Christian College", "Paul Quinn College", "Prairie View A & M University", "Southwestern Christian College", "St. Philip's College", "Texas College", "Texas Southern University", "Wiley College")
+hbcu <- c("Huston-Tillotson University", "Jarvis Christian College", "Paul Quinn College", "Prairie View A & M University", "Southwestern Christian College", "St. Philip's College", "Texas College", "Texas Southern University", "Wiley College")
 ```
 
 ```{r}
-# difference between Black students & professors
+# find percentage of Black tenured professors statewide in 2011 & 2019
+tenure %>% 
+  filter(year == 2019 | year == 2011) %>% 
+  group_by(year) %>% 
+  summarize(tenured_total = sum(tenured_total), black_tenured = sum(black_tenured)) %>% 
+  mutate(pct_black_tenured = black_tenured / tenured_total)
+
+# find percentage of Black tenured professors at HBCUs in 2019
 tenure %>% 
   filter(year == 2019) %>% 
-  select(name, pct_black_tenured, pct_black_student) %>% 
-  mutate(diff = pct_black_student - pct_black_tenured) %>% 
-  arrange(desc(diff)) %>% 
-  filter(name %in% dfw | name %in% flagship)
-
-# difference between Hispanic students & professors
-tenure %>% 
-  filter(year == 2019) %>% 
-  select(name, pct_his_tenured, pct_his_student) %>% 
-  mutate(diff = pct_his_student - pct_his_tenured) %>% 
-  arrange(desc(diff)) %>% 
-  filter(name %in% dfw | name %in% flagship)
-
-# difference between white students & professors
-tenure %>% 
-  filter(year == 2019) %>% 
-  select(name, pct_white_tenured, pct_white_student) %>% 
-  mutate(diff = pct_white_student - pct_white_tenured) %>% 
-  arrange(diff) %>% 
-  filter(name %in% dfw | name %in% flagship)
-
-tenure %>% 
-  filter(year == 2019) %>% 
-  select(name, black_tenured, tenured_total, pct_black_tenured) %>% 
-  arrange(name)
-
-tenure %>% 
-  filter(year == 2019, name %in% dfw | name %in% flagship)
-
-# overall tenure numbers by year
-tenure %>% 
-  filter(name %in% dfw | name %in% flagship) %>% 
-  select(name, year, tenured_total) %>% 
-  pivot_wider(names_from = year, values_from = tenured_total)
-```
-
-* mean difference b/w Black undergraduate students & tenured professors: 7%
-* mean difference b/w Hispanic undergraduate students & tenured professors: 28%
-* mean difference b/w white undergraduate students & tenured professors: -34%
-* UNT Dallas has fifth largest difference statewide: 26% Black undergraduate students", "4% Black tenured professors
-* TWU has third largest difference statewide: 26% white undergraduate students", "83% white tenured professors
-
-```{r}
-# difference from 2015 to 2019 (raw numbers)
-tenure %>% 
-  filter(year == 2019 | year == 2015) %>% 
-  select(name, year, black_tenured) %>% 
-  pivot_wider(names_from = year, values_from = black_tenured) %>% 
-  filter(!is.na(`2015`) & !is.na(`2019`)) %>% 
-  mutate(diff = `2019` - `2015`) %>% 
-  arrange(desc(diff)) %>% 
-  filter(name %in% dfw | name %in% flagship)
-
-# difference from 2015 to 2019 (percentages)
-tenure %>% 
-  filter(year == 2019 | year == 2015) %>% 
-  select(name, year, pct_black_tenured) %>% 
-  pivot_wider(names_from = year, values_from = pct_black_tenured) %>% 
-  filter(!is.na(`2015`) & !is.na(`2019`)) %>% 
-  mutate(diff = `2019` - `2015`) %>% 
-  arrange(desc(diff)) %>% 
-  filter(name %in% dfw | name %in% flagship)
+  filter(name %in% hbcu) %>% 
+  select(name, pct_black_tenured)
 
 # difference from 2010 to 2019 (raw numbers)
 tenure %>% 
@@ -194,78 +101,32 @@ tenure %>%
   arrange(desc(diff)) %>% 
   filter(name %in% dfw | name %in% flagship)
 
+# find tenure numbers for D-FW universities
 tenure %>% 
-  filter(year == 2019 | year == 2010) %>% 
-  group_by(year) %>% 
-  summarize(tenured_total = sum(tenured_total), black_tenured = sum(black_tenured)) %>% 
-  mutate(pct_black_tenured = black_tenured / tenured_total)
-
-# difference from 2001 to 2019 (raw numbers)
-tenure %>% 
-  filter(year == 2001 | year == 2019) %>% 
-  group_by(name) %>% 
-  mutate(count = n()) %>% 
-  filter(count == 2) %>% 
-  select(name, black_tenured, year) %>% 
-  arrange(name) %>% 
-  pivot_wider(names_from = year, values_from = black_tenured) %>% 
-  mutate(diff = `2019` - `2001`) %>% 
-  arrange(desc(diff)) %>% 
-  filter(name %in% dfw | name %in% flagship)
-
-# difference from 2001 to 2019 (percentages)
-tenure %>% 
-  filter(year == 2001 | year == 2019) %>% 
-  group_by(name) %>% 
-  mutate(count = n()) %>% 
-  filter(count == 2) %>% 
-  select(name, pct_black_tenured, year) %>% 
-  arrange(name) %>% 
-  pivot_wider(names_from = year, values_from = pct_black_tenured) %>% 
-  mutate(diff = `2019` - `2001`) %>% 
-  arrange(desc(diff)) %>% 
-  filter(name %in% dfw | name %in% flagship)
+  filter(year == 2019, name %in% dfw) %>% 
+  mutate(other_tenured = ind_tenured, pi_tenured, multi_tenured, unknown_tenured) %>% 
+  select(name, white_tenured, black_tenured, his_tenured, asian_tenured, other_tenured)
 ```
 
-from 2015 to 2019:
-* Abilene, SMU, TWU, U of Houston, UNT Dallas had same numbers
-* Texas State & UT lost four professors
-
-from 2001 to 2019: 
-* TWU had one Black tenured professor both years
-
 ```{r}
+# difference between Black students & professors
 tenure %>% 
   filter(year == 2019) %>% 
-  summarize(tenured_total = sum(tenured_total), black_tenured = sum(black_tenured),
-            student_total = sum(student_total), black_student = sum(black_student)) %>% 
-  mutate(pct_black_tenured = black_tenured / tenured_total, pct_black_student = black_student / student_total)
+  select(name, pct_black_tenured, pct_black_student) %>% 
+  mutate(diff = pct_black_student - pct_black_tenured) %>% 
+  arrange(desc(diff))
 
-#hbcu <- c("Huston–Tillotson University", "Jarvis Christian College", "Paul Quinn College", "Prairie View A & M University", "Southwestern Christian College", "St. Philip's College", "Texas College", "Texas Southern University", "Wiley College")
-
+# difference between Hispanic students & professors
 tenure %>% 
   filter(year == 2019) %>% 
-  filter(name %in% hbcu)
+  select(name, pct_his_tenured, pct_his_student) %>% 
+  mutate(diff = pct_his_student - pct_his_tenured) %>% 
+  arrange(desc(diff))
 
-tenure_dfw <- tenure %>% 
+# difference between white students & professors
+tenure %>% 
   filter(year == 2019) %>% 
-  filter(name %in% dfw) %>% 
-  mutate(other = ind_tenured + unknown_tenured + pi_tenured + multi_tenured) %>% 
-  select(name, white_tenured, black_tenured, his_tenured, asian_tenured, other) %>% 
-  transpose()
-
-tenure %>% 
-  filter(year == 2011) %>% 
-  summarize(tenured_total = sum(tenured_total), black_tenured = sum(black_tenured),
-            student_total = sum(student_total), black_student = sum(black_student)) %>% 
-  mutate(pct_black_tenured = black_tenured / tenured_total, pct_black_student = black_student / student_total)
-
-tenure_2019 <- tenure %>% 
-  filter(year == 2019)
-
-tenure %>% 
-  filter(name == "Southern Methodist University", year != 2001) %>% 
-  mutate(non_black = tenured_total - black_tenured, black = black_tenured) %>% 
-  select(year, non_black, black) %>% 
-  pivot_longer(!year, names_to = "race", values_to = "count")
+  select(name, pct_white_tenured, pct_white_student) %>% 
+  mutate(diff = pct_white_student - pct_white_tenured) %>% 
+  arrange(diff)
 ```
