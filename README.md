@@ -6,6 +6,6 @@ In 2011, 4.13% of all tenured professors in Texas were Black. By 2019, 4.64% wer
 
 Almost no four-year public or private higher education institution in Texas has more than 9% Black tenured professors, according to the most recently available federal data. Historically Black colleges and universities, or HBCUs, in Texas with tenure all have a rate of at least 40%.
 
-Read our story [here].(https://www.dallasnews.com/news/education/2021/07/15/why-are-so-few-black-professors-tenured-texas-has-made-little-progress-despite-promises-of-change/).
+Read our story [here](https://www.dallasnews.com/news/education/2021/07/15/why-are-so-few-black-professors-tenured-texas-has-made-little-progress-despite-promises-of-change/).
 
 Data from the U.S. Department of Education's [Integrated Postsecondary Education Data System](https://nces.ed.gov/ipeds/use-the-data).
